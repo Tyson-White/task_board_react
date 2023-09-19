@@ -1,0 +1,25 @@
+.addButton_wrapper {
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.658);
+  border-radius: 14px;
+  text-align: center;
+
+  &:hover {
+    transition: ease-out 0.1s;
+    background-color: rgba(20, 20, 20, 0.658);
+    cursor: pointer;
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  .content {
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    img {
+      margin-left: 10px;
+    }
+  }
+}

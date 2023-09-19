@@ -1,0 +1,91 @@
+.nameInput {
+  transition: ease 0.4s;
+  opacity: 0;
+  display: flex;
+  align-items: center;
+  width: 0px;
+  overflow: hidden;
+  border-radius: 10px;
+  margin: 10px 0;
+  background-color: #1d1d1d8f;
+
+  img {
+    cursor: pointer;
+
+    border-radius: 5px;
+    padding: 5px;
+
+    &:hover {
+      transition: ease-in 0.2s;
+      background-color: #ffffff3f;
+    }
+  }
+}
+
+.show {
+  transition: ease 0.4s;
+  opacity: 1;
+  padding: 5px 20px;
+  width: 260px;
+}
+input {
+  outline: none;
+  border: none;
+  height: 18px;
+  background: none;
+  font-size: 18px;
+  margin-right: 5px;
+
+  &::placeholder {
+    color: #ffffff6e;
+  }
+}
+
+.notValid {
+  color: red;
+  &::placeholder {
+    color: rgb(170, 91, 91);
+    transition: 0.1s;
+  }
+  /* Запустите анимацию встряхивания и сделайте так, чтобы анимация длилась 0,5 секунды */
+  animation: shake 0.5s;
+
+  /* Когда анимация будет закончена, начните снова */
+  animation-iteration-count: infinite;
+
+  @keyframes shake {
+    0% {
+      transform: translate(1px, 1px) rotate(0deg);
+    }
+    10% {
+      transform: translate(-1px, -2px) rotate(-1deg);
+    }
+    20% {
+      transform: translate(-3px, 0px) rotate(1deg);
+    }
+    30% {
+      transform: translate(3px, 2px) rotate(0deg);
+    }
+    40% {
+      transform: translate(1px, -1px) rotate(1deg);
+    }
+    50% {
+      transform: translate(-1px, 2px) rotate(-1deg);
+    }
+    60% {
+      transform: translate(-3px, 1px) rotate(0deg);
+    }
+    70% {
+      transform: translate(3px, 1px) rotate(-1deg);
+    }
+    80% {
+      transform: translate(-1px, -1px) rotate(1deg);
+    }
+    90% {
+      transform: translate(1px, 2px) rotate(0deg);
+    }
+    100% {
+      transform: translate(1px, -2px) rotate(-1deg);
+    }
+  }
+}

@@ -1,0 +1,154 @@
+.tasks_Card {
+  overflow: scroll;
+  opacity: 0;
+  min-width: 368px;
+  border-radius: 20px;
+  height: 100%;
+  margin-right: 20px;
+
+  &::-webkit-scrollbar {
+    width: 0;
+  }
+
+  .card_Header {
+    cursor: grab;
+    max-width: 100%;
+    padding: 0 9px;
+    height: 30px;
+    background-color: #181818;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .deleteBoard {
+      display: flex;
+      align-items: center;
+
+      font-weight: 600;
+      font-size: 14px;
+      padding: 0px 5px;
+      border-radius: 10px;
+      margin-left: 70px;
+
+      &:hover {
+        transition: 0.2s;
+        cursor: pointer;
+        background-color: rgb(116, 38, 38);
+      }
+    }
+
+    .color_change {
+      transform: translate(4px 5px);
+      cursor: pointer;
+      input {
+        border-radius: 50%;
+        overflow: hidden;
+        cursor: pointer;
+        width: 20px;
+        height: 20px;
+        transform: translate(2px, 3px);
+        padding: 0;
+        outline: none;
+        border: none;
+
+        &::-webkit-color-swatch-wrapper {
+          padding: 0;
+        }
+        &::-webkit-color-swatch {
+          border: 0;
+        }
+
+        &::-moz-color-swatch {
+          border: 0;
+        }
+      }
+    }
+
+    .card_name {
+      display: flex;
+      margin-left: 40px;
+      input {
+        outline: none;
+        border: none;
+        width: 100px;
+        color: #979696;
+        font-size: 16px;
+      }
+      .title {
+        margin-right: 10px;
+      }
+    }
+  }
+
+  .addTask {
+    transition: 0.2s;
+    text-align: center;
+    margin: 0px auto;
+    cursor: pointer;
+    img {
+      width: 20px;
+      transform: translate(0px, 5px);
+    }
+    width: 90%;
+    padding: 5px 0;
+    border-radius: 10px;
+    background-color: #353535;
+
+    &:hover {
+      transition: 0.4s;
+      width: 40%;
+    }
+  }
+}
+
+.change_icon {
+  cursor: pointer;
+
+  transform: translate(-2px, 3px);
+  img {
+    width: 14px;
+    height: 14px;
+    padding: 3px;
+    border-radius: 50%;
+  }
+}
+
+.cancel {
+  margin-right: 2px;
+  background-color: #353838;
+
+  &:hover {
+    transition: 0.2s;
+    background-color: rgb(190, 69, 69);
+  }
+}
+
+.accept {
+  transition: 0.2s;
+  background-color: #18181800;
+  &:hover {
+    background-color: #18181800;
+  }
+}
+
+.enable {
+  background-color: #353838;
+  &:hover {
+    transition: 0.2s;
+    background-color: rgb(85, 199, 152);
+  }
+}
+
+.tasks {
+  position: relative;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+}
+
+.show {
+  transition: 0.5s;
+  opacity: 1;
+}

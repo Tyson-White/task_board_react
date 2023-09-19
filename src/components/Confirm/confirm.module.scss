@@ -1,0 +1,66 @@
+.confirm_wrapper {
+  top: 0;
+  left: 0;
+  opacity: 0;
+  z-index: -1;
+  position: fixed;
+  transition: 0.3s;
+  width: 100%;
+  height: 100%;
+  background-color: #3a363650;
+  .confirm_content {
+    position: absolute;
+    top: 40%;
+    left: 45%;
+    z-index: 2;
+    width: 220px;
+    height: 80px;
+    background-color: rgb(54, 50, 50);
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+
+    .buttons {
+      margin-top: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    button {
+      width: 47%;
+      height: 50px;
+      font-weight: 600;
+      border-radius: 5px;
+      border: none;
+    }
+
+    .confirm {
+      background-color: rgb(233, 132, 132);
+      color: #3a3636;
+      &:hover {
+        transition: 0.3s;
+        cursor: pointer;
+        color: #fff;
+        background-color: rgb(235, 104, 104);
+      }
+    }
+
+    .cancel {
+      background-color: #443f3f;
+      color: #554f4f;
+
+      &:hover {
+        transition: 0.3s;
+        cursor: pointer;
+        color: #fff;
+        background-color: #554f4f;
+      }
+    }
+  }
+}
+
+.confirm_wrapper_show {
+  transition: ease-in 0.3s;
+  opacity: 1;
+  z-index: 2;
+}

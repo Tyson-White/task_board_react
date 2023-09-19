@@ -1,0 +1,15 @@
+.task_wrapper {
+  transition: ease 0.4s;
+  opacity: 0;
+  cursor: grab;
+  margin-top: 10px;
+  width: 90%;
+}
+
+.show {
+  opacity: 1;
+}
+
+.focused {
+  border-bottom: #ffffff;
+}
