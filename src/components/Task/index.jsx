@@ -9,7 +9,6 @@ export default function Index({
   onDeleteTask,
 }) {
   const [show, setShow] = React.useState(false);
-  const [isDelete, setIsDelete] = React.useState(false);
   const taskRef = React.useRef();
 
   React.useEffect(() => {

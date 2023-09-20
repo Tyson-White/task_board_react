@@ -9,17 +9,21 @@ import cancel from "../../assets/icons/cancel.svg";
 import acceptIcon from "../../assets/icons/accept.svg";
 import deleteIcon from "../../assets/icons/delete.svg";
 import Confirm from "../../components/Confirm";
+import { useDispatch } from "react-redux";
+import {
+  addTask,
+  toggleConfirm,
+  deleteBoard,
+} from "../../redux/slices/boardSlice";
 export default function Index({
   id,
   name,
   color,
-  onAddTask,
   tasksList,
   onHandleTaskOver,
   onHandleTaskStart,
   onHandleTaskEnd,
   onAcceptName,
-  onDeleteBoard,
   onDeleteTask,
   onHandleBoardStart,
   onHandleBoardOver,
@@ -30,15 +34,15 @@ export default function Index({
   const [isEditName, setIsEditName] = React.useState(false);
   const [isNaming, setIsNaming] = React.useState(false);
   const [taskName, setTaskName] = React.useState("");
-  const [isConfirm, setIsConfirm] = React.useState(false);
   const [show, setShow] = React.useState(false);
+  const dispatch = useDispatch();
   React.useEffect(() => {
     setTimeout(() => setShow(true), 0.5);
   }, []);
 
   const createTask = () => {
     setIsNaming(false);
-    onAddTask(name, taskName);
+    dispatch(addTask({ name, taskName }));
   };
 
   const editBoardName = () => {
@@ -61,9 +65,8 @@ export default function Index({
   return (
     <>
       <Confirm
-        isConfirm={isConfirm}
-        onConfirm={() => onDeleteBoard(name)}
-        onCancel={() => setIsConfirm(false)}
+        onConfirm={() => dispatch(deleteBoard(name))}
+        onCancel={() => dispatch(toggleConfirm(false))}
       />
       <div
         className={
@@ -131,7 +134,7 @@ export default function Index({
                 src={deleteIcon}
                 width={18}
                 alt=""
-                onClick={() => setIsConfirm(true)}
+                onClick={() => dispatch(toggleConfirm(true))}
               />
             </div>
           </div>
