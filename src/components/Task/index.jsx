@@ -1,24 +1,22 @@
 import React from "react";
 import Styles from "./Task.module.scss";
 import deleteIcon from "../../assets/icons/delete.svg";
+import { useActions } from "../../redux/hooks/useActions";
 
-export default function Index({
-  name,
-  onHandleTaskStart,
-  onHandleTaskEnd,
-  onDeleteTask,
-}) {
+export default function Index({ name }) {
+  const { startDragTask, endDragTask, deleteTask } = useActions();
   const [show, setShow] = React.useState(false);
   const taskRef = React.useRef();
 
   React.useEffect(() => {
+    // animation for show
     setTimeout(() => setShow(true), 0.5);
   }, []);
 
   const onHandleDelete = () => {
     taskRef.current.style.transform = "translate(900px, 0px)";
     setTimeout(() => {
-      onDeleteTask(name);
+      deleteTask(name);
       taskRef.current.style.transform = "translate(0px, 0px)";
     }, 200);
   };
@@ -43,8 +41,8 @@ export default function Index({
       draggable={true}
       onDragOver={(e) => illuminationOn(e)}
       onDragLeave={(e) => illuminationOff(e)}
-      onDragStart={() => onHandleTaskStart(name)}
-      onDragEnd={() => onHandleTaskEnd()}
+      onDragStart={() => startDragTask(name)}
+      onDragEnd={() => endDragTask()}
     >
       <div className={"task"}>
         <div className={Styles.task_title}>{name}</div>

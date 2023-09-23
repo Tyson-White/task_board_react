@@ -9,40 +9,30 @@ import cancel from "../../assets/icons/cancel.svg";
 import acceptIcon from "../../assets/icons/accept.svg";
 import deleteIcon from "../../assets/icons/delete.svg";
 import Confirm from "../../components/Confirm";
-import { useDispatch } from "react-redux";
-import {
-  addTask,
-  toggleConfirm,
-  deleteBoard,
-} from "../../redux/slices/boardSlice";
-export default function Index({
-  id,
-  name,
-  color,
-  tasksList,
-  onHandleTaskOver,
-  onHandleTaskStart,
-  onHandleTaskEnd,
-  onAcceptName,
-  onDeleteTask,
-  onHandleBoardStart,
-  onHandleBoardOver,
-  onHandleBoardEnd,
-}) {
+import { useActions } from "../../redux/hooks/useActions";
+export default function Index({ id, name, color, tasksList, onAcceptName }) {
   const [cardName, setCardName] = React.useState(name);
   const [cardColor, setCardColor] = React.useState(color);
   const [isEditName, setIsEditName] = React.useState(false);
   const [isNaming, setIsNaming] = React.useState(false);
   const [taskName, setTaskName] = React.useState("");
   const [show, setShow] = React.useState(false);
-  const dispatch = useDispatch();
+  const {
+    addTask,
+    deleteBoard,
+    toggleConfirm,
+    setSelectedBoard,
+    startDragBoard,
+    endDragBoard,
+  } = useActions();
+
   React.useEffect(() => {
     setTimeout(() => setShow(true), 0.5);
   }, []);
 
   const createTask = () => {
     setIsNaming(false);
-    dispatch(addTask({ name, taskName }));
+    addTask({ name, taskName });
   };
 
   const editBoardName = () => {
@@ -65,8 +55,8 @@ export default function Index({
   return (
     <>
       <Confirm
-        onConfirm={() => dispatch(deleteBoard(name))}
-        onCancel={() => dispatch(toggleConfirm(false))}
+        onConfirm={() => deleteBoard(name)}
+        onCancel={() => toggleConfirm(false)}
       />
       <div
         className={
@@ -74,9 +64,9 @@ export default function Index({
         }
         style={{ background: cardColor }}
         draggable={true}
-        onDragStart={() => onHandleBoardStart(name)}
-        onDragOver={() => onHandleBoardOver(name)}
-        onDragEnd={() => onHandleBoardEnd()}
+        onDragStart={() => startDragBoard(name)}
+        onDragOver={() => setSelectedBoard(name)}
+        onDragEnd={() => endDragBoard()}
       >
         <div className={Styles.card_Header}>
           <div className={Styles.color_change}>
@@ -134,7 +124,7 @@ export default function Index({
                 src={deleteIcon}
                 width={18}
                 alt=""
-                onClick={() => dispatch(toggleConfirm(true))}
+                onClick={() => toggleConfirm(true)}
               />
             </div>
           </div>
@@ -142,7 +132,7 @@ export default function Index({
         <div
           className={Styles.tasks}
           onDragOver={() => {
-            onHandleTaskOver(name);
+            setSelectedBoard(id);
           }}
         >
           {!isNaming ? (
@@ -163,9 +153,7 @@ export default function Index({
               <Task
                 key={index}
                 name={item.name}
-                onHandleTaskStart={(name) => onHandleTaskStart(name)}
-                onHandleTaskEnd={(name) => onHandleTaskEnd(name)}
-                onDeleteTask={(taskName) => onDeleteTask(name, taskName)}
+                onDeleteTask={(taskName) => deleteTask({ name, taskName })}
               />
             ))}
         </div>
