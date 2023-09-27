@@ -1,4 +1,34 @@
 {
-  "data": [{ "name": "Alex" }],
-  "times": [{ "stamp": "25.01.2005" }]
+  "boards": [
+    {
+      "id": "oQu3f",
+      "name": "asdasd",
+      "color": "#242424",
+      "tasks": []
+    },
+    {
+      "id": "X5HOw",
+      "name": "xzczxc",
+      "color": "#242424",
+      "tasks": []
+    },
+    {
+      "id": "ZCJQv",
+      "name": "weqeqwe",
+      "color": "#242424",
+      "tasks": []
+    }
+  ],
+  "tasks": [
+    {
+      "id": "7lBpN-t",
+      "name": "czxc",
+      "link": "_jLRX"
+    },
+    {
+      "id": "jjYeA-t",
+      "name": "asdas",
+      "link": "X5HOw"
+    }
+  ]
 }

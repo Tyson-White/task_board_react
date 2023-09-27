@@ -7,21 +7,32 @@ import lightTheme from "./assets/img/sky.jpg";
 import nightTheme from "./assets/img/sky_night.jpg";
 import sun from "./assets/icons/sun.svg";
 import moon from "./assets/icons/moon.svg";
-import { useSelector } from "react-redux";
+import loadinGif from "./assets/icons/loading.gif";
+import {
+  fetchBoards,
+  createBoard,
+  fetchTasks,
+} from "./redux/slices/boardSlice";
+import { useDispatch } from "react-redux";
+
 import { useBoards } from "./redux/hooks/useBoards";
-import axios from "axios";
-import { useActions } from "./redux/hooks/useActions";
+
 function App() {
   const [theme, setTheme] = React.useState("light");
   const [windowsList, setWindowsList] = React.useState([]);
   const [isNamingWindow, setIsNamingWindow] = React.useState(false);
   const [name, setName] = React.useState("");
+  const dispatch = useDispatch();
 
-  const { addBoard } = useActions();
   const { boards } = useBoards();
 
+  React.useEffect(() => {
+    dispatch(fetchBoards());
+    dispatch(fetchTasks());
+  }, []);
+
   const createWindow = () => {
-    addBoard(name);
+    dispatch(createBoard(name));
     setName("");
     setIsNamingWindow(false);
   };
@@ -91,25 +102,34 @@ function App() {
           </div>
 
           <div className="boards">
-            {boards.boardsList.length < 1 && (
+            {boards.isLoading ? (
               <>
-                <p>Нет досок</p>
+                <p>
+                  <img src={loadinGif} width={60} height={60} alt="" />
+                </p>
               </>
+            ) : (
+              boards.boardsList.length < 1 && (
+                <>
+                  <p>Нет досок</p>
+                </>
+              )
             )}
-            {boards.boardsList.map((item) => (
-              <>
-                <TasksWindow
-                  id={item.id}
-                  name={item.name}
-                  key={item.id}
-                  tasksList={item.tasks}
-                  color={item.color}
-                  onAcceptName={(boardName, newName) =>
-                    changeBoardName(boardName, newName)
-                  }
-                />
-              </>
-            ))}
+            {boards.boardsList.length > 0 &&
+              boards.boardsList.map((item) => (
+                <>
+                  <TasksWindow
+                    id={item.id}
+                    name={item.name}
+                    key={item.id}
+                    tasksList={item.tasks}
+                    color={item.color}
+                    onAcceptName={(boardName, newName) =>
+                      changeBoardName(boardName, newName)
+                    }
+                  />
+                </>
+              ))}
           </div>
         </div>
       </div>

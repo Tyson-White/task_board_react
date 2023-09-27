@@ -1,15 +1,18 @@
 import React from "react";
 import Styles from "./TasksWindow.module.scss";
 import editIcon from "../../assets/icons/edit.svg";
-import colorChange from "../../assets/icons/colorChange.svg";
 import addIcon from "../../assets/icons/addIcon.svg";
 import Name from "../Name";
 import Task from "../Task";
 import cancel from "../../assets/icons/cancel.svg";
 import acceptIcon from "../../assets/icons/accept.svg";
 import deleteIcon from "../../assets/icons/delete.svg";
+import { deleteBoard } from "../../redux/slices/boardSlice";
+import { createTask } from "../../redux/slices/boardSlice";
 import Confirm from "../../components/Confirm";
 import { useActions } from "../../redux/hooks/useActions";
+import { useDispatch } from "react-redux";
+import { useBoards } from "../../redux/hooks/useBoards";
 export default function Index({ id, name, color, tasksList, onAcceptName }) {
   const [cardName, setCardName] = React.useState(name);
   const [cardColor, setCardColor] = React.useState(color);
@@ -17,22 +20,18 @@ export default function Index({ id, name, color, tasksList, onAcceptName }) {
   const [isNaming, setIsNaming] = React.useState(false);
   const [taskName, setTaskName] = React.useState("");
   const [show, setShow] = React.useState(false);
-  const {
-    addTask,
-    deleteBoard,
-    toggleConfirm,
-    setSelectedBoard,
-    startDragBoard,
-    endDragBoard,
-  } = useActions();
+  const dispatch = useDispatch();
+  const { boards } = useBoards();
+  const { toggleConfirm, setSelectedBoard, startDragBoard, endDragBoard } =
+    useActions();
 
   React.useEffect(() => {
     setTimeout(() => setShow(true), 0.5);
   }, []);
 
-  const createTask = () => {
+  const addTask = () => {
     setIsNaming(false);
-    addTask({ name, taskName });
+    dispatch(createTask({ id, taskName }));
   };
 
   const editBoardName = () => {
@@ -54,19 +53,15 @@ export default function Index({ id, name, color, tasksList, onAcceptName }) {
 
   return (
     <>
-      <Confirm
-        onConfirm={() => deleteBoard(name)}
-        onCancel={() => toggleConfirm(false)}
-      />
       <div
         className={
           show ? `${Styles.tasks_Card} ${Styles.show}` : Styles.tasks_Card
         }
         style={{ background: cardColor }}
         draggable={true}
-        onDragStart={() => startDragBoard(name)}
-        onDragOver={() => setSelectedBoard(name)}
-        onDragEnd={() => endDragBoard()}
+        onDragOver={() => setSelectedBoard(id)}
+        onDragEnd={() => endDragBoard(id)}
+        onDragStart={() => startDragBoard(id)}
       >
         <div className={Styles.card_Header}>
           <div className={Styles.color_change}>
@@ -124,7 +119,9 @@ export default function Index({ id, name, color, tasksList, onAcceptName }) {
                 src={deleteIcon}
                 width={18}
                 alt=""
-                onClick={() => toggleConfirm(true)}
+                onClick={() => {
+                  dispatch(deleteBoard(id));
+                }}
               />
             </div>
           </div>
@@ -145,17 +142,21 @@ export default function Index({ id, name, color, tasksList, onAcceptName }) {
           ) : (
             <Name
               onChangeName={(name) => setTaskName(name)}
-              onAccept={(name) => createTask(name)}
+              onAccept={(name) => addTask(name)}
             />
           )}
-          {tasksList.length > 0 &&
-            tasksList.map((item, index) => (
-              <Task
-                key={index}
-                name={item.name}
-                onDeleteTask={(taskName) => deleteTask({ name, taskName })}
-              />
-            ))}
+          {boards.tasksList.length > 0 &&
+            boards.tasksList.map(
+              (item, index) =>
+                item.link == id && (
+                  <Task
+                    key={item.id}
+                    id={item.id}
+                    name={item.name}
+                    onDeleteTask={(taskName) => deleteTask({ name, taskName })}
+                  />
+                )
+            )}
         </div>
       </div>
     </>

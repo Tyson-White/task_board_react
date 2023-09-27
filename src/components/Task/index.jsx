@@ -1,12 +1,15 @@
 import React from "react";
 import Styles from "./Task.module.scss";
 import deleteIcon from "../../assets/icons/delete.svg";
+import { deleteTask } from "../../redux/slices/boardSlice";
+import { useDispatch } from "react-redux";
 import { useActions } from "../../redux/hooks/useActions";
 
-export default function Index({ name }) {
-  const { startDragTask, endDragTask, deleteTask } = useActions();
+export default function Index({ id, name }) {
+  const { startDragTask, endDragTask } = useActions();
   const [show, setShow] = React.useState(false);
   const taskRef = React.useRef();
+  const dispatch = useDispatch();
 
   React.useEffect(() => {
     // animation for show
@@ -16,7 +19,7 @@ export default function Index({ name }) {
   const onHandleDelete = () => {
     taskRef.current.style.transform = "translate(900px, 0px)";
     setTimeout(() => {
-      deleteTask(name);
+      dispatch(deleteTask(id));
       taskRef.current.style.transform = "translate(0px, 0px)";
     }, 200);
   };
