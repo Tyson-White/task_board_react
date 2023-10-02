@@ -71,7 +71,6 @@
 
     .card_name {
       display: flex;
-      margin-left: 40px;
       input {
         outline: none;
         border: none;
@@ -80,28 +79,84 @@
         font-size: 16px;
       }
       .title {
-        margin-right: 10px;
+        font-weight: 600;
       }
     }
   }
 
   .addTask {
-    transition: 0.2s;
-    text-align: center;
-    margin: 0px auto;
+    display: flex;
+    justify-content: center;
     cursor: pointer;
     img {
-      width: 20px;
-      transform: translate(0px, 5px);
+      width: 15px;
+      transform: translate(-5px, 2px);
     }
     width: 90%;
     padding: 5px 0;
-    border-radius: 10px;
-    background-color: #353535;
-
+    border-radius: 5px;
+    margin-top: 10px;
     &:hover {
       transition: 0.4s;
-      width: 40%;
+      background-color: #353535;
+    }
+  }
+}
+
+.enterName {
+  margin: 0 auto;
+  width: 90%;
+  margin-top: 10px;
+  textarea {
+    font-family: Arial;
+    font-size: 16px;
+    resize: none;
+    background-color: #2d2f35;
+    width: 90%;
+    border: none;
+    border-radius: 10px;
+    padding: 10px;
+
+    &::placeholder {
+      color: #4a4a4b;
+    }
+
+    &:focus {
+      color: #fff;
+      outline: #39659e;
+      border: 2px solid #39659e;
+      &::placeholder {
+        color: #39659e;
+      }
+    }
+  }
+}
+
+.actions {
+  display: flex;
+
+  .accept {
+    width: 130px;
+    height: 30px;
+    border: none;
+    background-color: rgb(89, 152, 223);
+    color: #252525;
+    margin-right: 10px;
+    border-radius: 2px;
+    font-weight: 600;
+
+    &:hover {
+      cursor: pointer;
+      background-color: rgb(98, 166, 243);
+    }
+  }
+
+  .cancel {
+    border: none;
+    background-color: rgb(185, 60, 77);
+    &:hover {
+      cursor: pointer;
+      background-color: rgb(230, 105, 121);
     }
   }
 }

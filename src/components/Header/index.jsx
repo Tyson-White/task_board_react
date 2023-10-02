@@ -4,7 +4,9 @@ export default function Index() {
   return (
     <>
       <div className={Styles.header_wrapper}>
-        <p>Tasks Board React</p>
+        <div className={Styles.title}>
+          TaskBoard <span>React</span>
+        </div>
       </div>
     </>
   );

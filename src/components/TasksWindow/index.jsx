@@ -34,7 +34,6 @@ export default function Index({
   const [moveX, setMoveX] = React.useState(BOARD_POS_X);
   const [downY, setDownY] = React.useState();
   const [moveY, setMoveY] = React.useState();
-  const [bgPos, setBgPos] = React.useState();
 
   const boardRef = React.useRef();
 
@@ -66,6 +65,46 @@ export default function Index({
     boardRef.current.style.display = "none";
   };
 
+  const onMoveBoard = (e) => {
+    if (isDrag) {
+      boardRef.current.style.transform = "rotate(10deg)";
+
+      const parentX = boardRef.current.parentNode.getBoundingClientRect().x;
+
+      const boardX = boardRef.current.getBoundingClientRect().x - parentX;
+      const boardHeight = boardRef.current.getBoundingClientRect().height;
+      const objPos = boards.boardsList.find((item) => item.id == id).position;
+
+      const nextObj = boards.boardsList.find(
+        (item) => item.position == objPos + 1
+      );
+      const prevObj = boards.boardsList.find(
+        (item) => item.position == objPos - 1
+      );
+
+      setMoveX(BOARD_POS_X + (e.clientX - downX)); // 20 - margin left
+      setMoveY(e.clientY - downY);
+      onChangePlace(BOARD_WIDTH, boardHeight, BOARD_POS_X, 5);
+
+      if (nextObj) {
+        const nextX = 20 + 20 * nextObj.position + 268 * nextObj.position;
+
+        if (boardX > nextX) {
+          setDownX(e.clientX);
+          moveBoard({ moveFrom: objPos, moveTo: objPos + 1 });
+        }
+      }
+      if (prevObj) {
+        const prevX = 20 + 20 * prevObj.position + 268 * prevObj.position;
+
+        if (boardX < prevX) {
+          setDownX(e.clientX);
+          moveBoard({ moveFrom: objPos, moveTo: objPos - 1 });
+        }
+      }
+    }
+  };
+
   return (
     <>
       <div
@@ -91,49 +130,7 @@ export default function Index({
           setDownY(e.clientY);
           boardRef.current.style.border = "2px dotted #4d4d4d";
         }}
-        onMouseMove={(e) => {
-          if (isDrag) {
-            boardRef.current.style.transform = "rotate(10deg)";
-
-            const parentX =
-              boardRef.current.parentNode.getBoundingClientRect().x;
-
-            const boardX = boardRef.current.getBoundingClientRect().x - parentX;
-            const boardHeight = boardRef.current.getBoundingClientRect().height;
-            const objPos = boards.boardsList.find(
-              (item) => item.id == id
-            ).position;
-
-            const nextObj = boards.boardsList.find(
-              (item) => item.position == objPos + 1
-            );
-            const prevObj = boards.boardsList.find(
-              (item) => item.position == objPos - 1
-            );
-
-            setMoveX(BOARD_POS_X + (e.clientX - downX)); // 20 - margin left
-            setMoveY(e.clientY - downY);
-            onChangePlace(BOARD_WIDTH, boardHeight, BOARD_POS_X, 5);
-
-            if (nextObj) {
-              const nextX = 20 + 20 * nextObj.position + 268 * nextObj.position;
-              setBgPos(nextX);
-
-              if (boardX > nextX) {
-                setDownX(e.clientX);
-                moveBoard({ moveFrom: objPos, moveTo: objPos + 1 });
-              }
-            }
-            if (prevObj) {
-              const prevX = 20 + 20 * prevObj.position + 268 * prevObj.position;
-
-              if (boardX < prevX) {
-                setDownX(e.clientX);
-                moveBoard({ moveFrom: objPos, moveTo: objPos - 1 });
-              }
-            }
-          }
-        }}
+        onMouseMove={(e) => onMoveBoard(e)}
         onMouseLeave={() => {
           setIsDrag(false);
           setDownX(0);
@@ -190,19 +187,6 @@ export default function Index({
             setSelectedBoard(id);
           }}
         >
-          {!isNaming ? (
-            <div className={Styles.addTask} onClick={() => setIsNaming(true)}>
-              <div className={Styles.icon}>
-                <img src={addIcon} alt="" />
-              </div>
-              <div className={Styles.title}>Новая задача</div>
-            </div>
-          ) : (
-            <Name
-              onChangeName={(name) => setTaskName(name)}
-              onAccept={(name) => addTask(name)}
-            />
-          )}
           {boards.tasksList.length > 0 &&
             boards.tasksList.map(
               (item, index) =>
@@ -215,6 +199,36 @@ export default function Index({
                   />
                 )
             )}
+          <div className={Styles.addTask} onClick={() => setIsNaming(true)}>
+            <div className={Styles.icon}>
+              <img src={addIcon} alt="" />
+            </div>
+            <div className={Styles.title}>Новая задача</div>
+          </div>
+
+          {isNaming && (
+            <div className={Styles.enterName}>
+              <textarea
+                placeholder="Введите заголовок"
+                name=""
+                id=""
+                cols="30"
+                rows="2"
+                onChange={(e) => setTaskName(e.target.value)}
+              ></textarea>
+              <div className={Styles.actions}>
+                <button className={Styles.accept} onClick={() => addTask()}>
+                  Добавить задачу
+                </button>
+                <button
+                  className={Styles.cancel}
+                  onClick={() => setIsNaming(false)}
+                >
+                  Отмена
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </>

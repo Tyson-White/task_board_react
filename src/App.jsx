@@ -4,7 +4,7 @@ import TasksWindow from "./components/TasksWindow";
 import Name from "./components/Name";
 import Header from "./components/Header";
 import lightTheme from "./assets/img/sky.jpg";
-import nightTheme from "./assets/img/sky_night.jpg";
+import nightTheme from "./assets/img/sky_night.png";
 import sun from "./assets/icons/sun.svg";
 import moon from "./assets/icons/moon.svg";
 import loadinGif from "./assets/icons/loading.gif";
@@ -21,8 +21,6 @@ import { useBoards } from "./redux/hooks/useBoards";
 function App() {
   const [theme, setTheme] = React.useState("light");
   const [windowsList, setWindowsList] = React.useState([]);
-  const [isNamingWindow, setIsNamingWindow] = React.useState(false);
-  const [name, setName] = React.useState("");
   const [placeOptions, setPlaceOptions] = React.useState({
     width: 0,
     height: 0,
@@ -39,10 +37,8 @@ function App() {
     dispatch(fetchTasks());
   }, []);
 
-  const createWindow = () => {
+  const createWindow = (name) => {
     dispatch(createBoard(name));
-    setName("");
-    setIsNamingWindow(false);
   };
 
   const changeBoardName = (boardName, newName) => {
@@ -56,27 +52,10 @@ function App() {
 
   return (
     <>
-      <div
-        className="content"
-        style={{
-          background:
-            theme == "light" ? `url(${lightTheme})` : `url(${nightTheme})`,
-        }}
-      >
+      <div className={theme == "light" ? "content" : "content night"}>
         <Header />
         <div className="wrapper" draggable={false}>
           <div className="sidebar">
-            <AddButton onClick={() => setIsNamingWindow(true)} />
-            {isNamingWindow && (
-              <div className="editName">
-                <Name
-                  onChangeName={(item) => {
-                    setName(item);
-                  }}
-                  onAccept={() => createWindow()}
-                />
-              </div>
-            )}
             <div className="board_info">
               Всего досок:
               <p>{boards.boardCount}</p>
@@ -89,16 +68,16 @@ function App() {
               className={
                 theme == "light" ? "select_theme" : "select_theme dark_theme"
               }
+              onClick={() => {
+                if (theme == "light") {
+                  setTheme("dark");
+                } else {
+                  setTheme("light");
+                }
+              }}
             >
               <div
                 className={theme == "light" ? "toggle" : "toggle toggle_dark"}
-                onClick={() => {
-                  if (theme == "light") {
-                    setTheme("dark");
-                  } else {
-                    setTheme("light");
-                  }
-                }}
               >
                 {theme == "light" ? (
                   <img src={sun} alt="" width={20} />
@@ -108,7 +87,6 @@ function App() {
               </div>
             </div>
           </div>
-
           <div className="boards">
             {boards.isLoading ? (
               <>
@@ -148,6 +126,7 @@ function App() {
                   />
                 </>
               ))}
+            <AddButton onAccept={(name) => createWindow(name)} />
           </div>
         </div>
       </div>
