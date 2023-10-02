@@ -1,34 +1,39 @@
 {
   "boards": [
     {
-      "id": "oQu3f",
-      "name": "asdasd",
+      "id": "YQq7s",
+      "name": "фывфыв",
+      "position": 0,
       "color": "#242424",
       "tasks": []
     },
     {
-      "id": "X5HOw",
+      "id": "bdpPc",
+      "name": "zxczxc",
+      "position": 1,
+      "color": "#242424",
+      "tasks": []
+    },
+    {
+      "id": "Y7J2u",
       "name": "xzczxc",
+      "position": 2,
       "color": "#242424",
       "tasks": []
     },
     {
-      "id": "ZCJQv",
-      "name": "weqeqwe",
+      "id": "iS3fS",
+      "name": "asdasd",
+      "position": 3,
       "color": "#242424",
       "tasks": []
     }
   ],
   "tasks": [
     {
-      "id": "7lBpN-t",
-      "name": "czxc",
-      "link": "_jLRX"
-    },
-    {
-      "id": "jjYeA-t",
-      "name": "asdas",
-      "link": "X5HOw"
+      "id": "_HPFq-t",
+      "name": "sadsad",
+      "link": "YQq7s"
     }
   ]
 }

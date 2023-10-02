@@ -8,6 +8,7 @@ import nightTheme from "./assets/img/sky_night.jpg";
 import sun from "./assets/icons/sun.svg";
 import moon from "./assets/icons/moon.svg";
 import loadinGif from "./assets/icons/loading.gif";
+import SelectedPlace from "./components/SelectedPlace";
 import {
   fetchBoards,
   createBoard,
@@ -22,6 +23,13 @@ function App() {
   const [windowsList, setWindowsList] = React.useState([]);
   const [isNamingWindow, setIsNamingWindow] = React.useState(false);
   const [name, setName] = React.useState("");
+  const [placeOptions, setPlaceOptions] = React.useState({
+    width: 0,
+    height: 0,
+    x: 0,
+    y: 0,
+  });
+
   const dispatch = useDispatch();
 
   const { boards } = useBoards();
@@ -109,21 +117,31 @@ function App() {
                 </p>
               </>
             ) : (
-              boards.boardsList.length < 1 && (
+              boards.boardCount < 1 && (
                 <>
                   <p>Нет досок</p>
                 </>
               )
             )}
+            <SelectedPlace
+              width={placeOptions.width}
+              height={placeOptions.height}
+              x={placeOptions.x}
+              y={placeOptions.y}
+            />
             {boards.boardsList.length > 0 &&
               boards.boardsList.map((item) => (
                 <>
                   <TasksWindow
                     id={item.id}
                     name={item.name}
+                    position={item.position}
                     key={item.id}
                     tasksList={item.tasks}
                     color={item.color}
+                    onChangePlace={(width, height, x, y) =>
+                      setPlaceOptions({ width, height, x, y })
+                    }
                     onAcceptName={(boardName, newName) =>
                       changeBoardName(boardName, newName)
                     }

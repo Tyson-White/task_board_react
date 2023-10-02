@@ -1,5 +1,6 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, current } from "@reduxjs/toolkit";
 import axios from "axios";
+
 import { nanoid } from "nanoid";
 
 export const fetchBoards = createAsyncThunk(
@@ -15,10 +16,12 @@ export const fetchBoards = createAsyncThunk(
 export const createBoard = createAsyncThunk(
   "boards/createBoard",
   async (boardName, thunkAPI) => {
+    const getPos = thunkAPI.getState((state) => state).boards.boardCount;
     const id = nanoid(5);
     const obj = {
       id: id,
       name: boardName,
+      position: getPos,
       color: "#242424",
       tasks: [],
     };
@@ -31,16 +34,34 @@ export const createBoard = createAsyncThunk(
 export const deleteBoard = createAsyncThunk(
   "boards/deleteBoard",
   async (id, thunkAPI) => {
-    console.log(id);
-    axios.delete(`http://localhost:5174/boards/${id}`);
+    axios
+      .delete(`http://localhost:5174/boards/${id}`)
+      .then(() => {
+        thunkAPI.dispatch(changePositios(id));
+      })
+      .catch((err) => {
+        console.log("Ошибка");
+      });
 
     return id;
   }
 );
 
+export const changePositios = createAsyncThunk(
+  "boards/changePositios",
+  async (item, thunkAPI) => {
+    if (item.id) {
+      axios.put(`http://localhost:5174/boards/${item.id}`, {
+        ...item,
+        position: item.position - 1,
+      });
+    }
+  }
+);
+
 export const fetchTasks = createAsyncThunk(
   "boards/fetchTasks",
-  async (thunkAPI) => {
+  async (item, thunkAPI) => {
     const result = axios.get("http://localhost:5174/tasks").then((res) => {
       return res.data;
     });
@@ -96,9 +117,6 @@ export const boardSlice = createSlice({
       state.grabBoard = "";
       state.grabTask = payload;
     },
-    setSelectedBoard: (state, { payload }) => {
-      state.overBoard = payload;
-    },
     setSelectedTask: (state, { payload }) => {
       state.overTask = payload;
     },
@@ -127,28 +145,22 @@ export const boardSlice = createSlice({
       state.overBoard = "";
       state.grabTask = "";
     },
-    startDragBoard: (state, { payload }) => {
-      state.grabBoard = payload;
-    },
-    endDragBoard: (state, { payload }) => {
-      if (state.grabTask == "") {
-        const grabbed = state.boardsList.find(
-          (item) => item.id == state.grabBoard
-        );
-        const toPast = state.boardsList.find(
-          (item) => item.id == state.overBoard
-        );
+    moveBoard: (state, action) => {
+      const fromIndex = current(state).boardsList.indexOf(
+        current(state).boardsList.find(
+          (item) => item.position == action.payload.moveFrom
+        )
+      );
+      const toIndex = current(state).boardsList.indexOf(
+        current(state).boardsList.find(
+          (item) => item.position == action.payload.moveTo
+        )
+      );
 
-        const grabbedIndex = state.boardsList.indexOf(grabbed);
-        const toPastIndex = state.boardsList.indexOf(toPast);
-        const list = state.boardsList;
-
-        list[grabbedIndex] = toPast;
-        list[toPastIndex] = grabbed;
-
-        state.boardsList = list;
-        state.grabBoard = "";
-        state.overBoard = "";
+      if (state.boardsList[toIndex].position) {
+        console.log(fromIndex, toIndex);
+        state.boardsList[fromIndex].position = action.payload.moveTo;
+        state.boardsList[toIndex].position = action.payload.moveFrom;
       }
     },
   },
@@ -177,13 +189,17 @@ export const boardSlice = createSlice({
       state.isLoading = false;
     });
     builder.addCase(deleteBoard.fulfilled, (state, action) => {
-      console.log(action.payload);
-      const list = state.boardsList.filter((item) => item.id != action.payload);
+      let list = state.boardsList;
+      const pos = list.indexOf(list.find((item) => item.id == action.payload));
       const obj = state.boardsList.find((item) => item.id == action.payload);
-      state.boardsList = list;
+      for (let i = pos + 1; i < list.length; i++) {
+        console.log(list[i].position);
+        state.boardsList[i].position -= 1;
+      }
+      // state.boardsList = list.filter((item) => item.id != action.payload);
+
       state.boardCount = state.boardCount - 1;
       state.taskCount = state.taskCount - obj.tasks.length;
-      state.isConfirm = !state.isConfirm;
     });
     builder.addCase(createTask.fulfilled, (state, action) => {
       state.tasksList = [...state.tasksList, action.payload];
