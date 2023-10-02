@@ -1,23 +1,16 @@
 {
   "boards": [
     {
-      "id": "M7pwi",
-      "name": "фывфыв",
+      "id": "FZE7x",
+      "name": "zxczxc",
       "position": 0,
       "color": "#242424",
       "tasks": []
     },
     {
-      "id": "HnGpS",
-      "name": "ыфвфыв",
+      "id": "XAVZD",
+      "name": "asdasd",
       "position": 1,
-      "color": "#242424",
-      "tasks": []
-    },
-    {
-      "id": "SrqPY",
-      "name": "фывфыв",
-      "position": 2,
       "color": "#242424",
       "tasks": []
     }

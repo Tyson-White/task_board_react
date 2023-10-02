@@ -1,7 +1,6 @@
 import React from "react";
 import Styles from "./TasksWindow.module.scss";
 import addIcon from "../../assets/icons/addIcon.svg";
-import Name from "../Name";
 import Task from "../Task";
 import deleteIcon from "../../assets/icons/delete.svg";
 import { changePositios, deleteBoard } from "../../redux/slices/boardSlice";
@@ -9,26 +8,16 @@ import { createTask } from "../../redux/slices/boardSlice";
 import { useActions } from "../../redux/hooks/useActions";
 import { useDispatch } from "react-redux";
 import { useBoards } from "../../redux/hooks/useBoards";
-export default function Index({
-  id,
-  name,
-  color,
-  position,
-  onAcceptName,
-  onChangePlace,
-}) {
+export default function Index({ id, name, color, position, onChangePlace }) {
   const BOARD_POS_X = 20 + 20 * position + 268 * position;
   const BOARD_WIDTH = 268;
 
   // board info
-  const [cardName, setCardName] = React.useState(name);
   const [cardColor, setCardColor] = React.useState(color);
-  const [isEditName, setIsEditName] = React.useState(false);
   const [isNaming, setIsNaming] = React.useState(false);
   const [taskName, setTaskName] = React.useState("");
   const [show, setShow] = React.useState(false);
 
-  // move board
   const [isDrag, setIsDrag] = React.useState(false);
   const [downX, setDownX] = React.useState(0);
   const [moveX, setMoveX] = React.useState(BOARD_POS_X);
@@ -65,13 +54,17 @@ export default function Index({
     boardRef.current.style.display = "none";
   };
 
+  // самая сложная часть, делал 6 дней...
   const onMoveBoard = (e) => {
     if (isDrag) {
       boardRef.current.style.transform = "rotate(10deg)";
 
       const parentX = boardRef.current.parentNode.getBoundingClientRect().x;
 
+      // высчитываем позицию карточки относительно элемента boards
+      // берем x коорд. доски и вычитаем x коорд. элемента boards
       const boardX = boardRef.current.getBoundingClientRect().x - parentX;
+
       const boardHeight = boardRef.current.getBoundingClientRect().height;
       const objPos = boards.boardsList.find((item) => item.id == id).position;
 
@@ -82,10 +75,18 @@ export default function Index({
         (item) => item.position == objPos - 1
       );
 
-      setMoveX(BOARD_POS_X + (e.clientX - downX)); // 20 - margin left
+      // записываем координаты так, чтобы при передвижении доска не меняла свое положение
+      setMoveX(BOARD_POS_X + (e.clientX - downX));
       setMoveY(e.clientY - downY);
+
+      // подсветка снизу доски, обозначающая место, куда поставится карточка
       onChangePlace(BOARD_WIDTH, boardHeight, BOARD_POS_X, 5);
 
+      /* 
+      перемещение вперед
+      проверка nextObj для того, чтобы приложение не сломалось, если впереди 
+      ничего нет
+      */
       if (nextObj) {
         const nextX = 20 + 20 * nextObj.position + 268 * nextObj.position;
 
@@ -94,6 +95,13 @@ export default function Index({
           moveBoard({ moveFrom: objPos, moveTo: objPos + 1 });
         }
       }
+
+      /* 
+      перемещение назад(!!сломано!!)
+      проверка nextObj для того, чтобы приложение не сломалось, если впереди 
+      ничего нет
+      */
+
       if (prevObj) {
         const prevX = 20 + 20 * prevObj.position + 268 * prevObj.position;
 
@@ -103,6 +111,37 @@ export default function Index({
         }
       }
     }
+  };
+
+  // конец перемещения, обнуляем позиции, убираем эффекты
+  const moveEnd = () => {
+    setIsDrag(false);
+    setDownX(0);
+    setMoveX(BOARD_POS_X);
+    setMoveY(5);
+    boardRef.current.style.border = "none";
+    boardRef.current.style.transform = "rotate(0)";
+    onChangePlace(0, 0, 0, 0);
+  };
+
+  // записываем координаты клика и немного эффектов
+  const moveStart = (e) => {
+    setIsDrag(true);
+    setDownX(e.clientX);
+    setMoveX(BOARD_POS_X);
+    setDownY(e.clientY);
+    boardRef.current.style.border = "2px dotted #4d4d4d";
+  };
+
+  // если мышка ушла с элемента перетаскивание отменяется
+  const moveCrash = () => {
+    setIsDrag(false);
+    setDownX(0);
+    setMoveX(BOARD_POS_X);
+    setMoveY(5);
+    boardRef.current.style.border = "none";
+    boardRef.current.style.transform = "rotate(0)";
+    onChangePlace(0, 0, 0, 0);
   };
 
   return (
@@ -123,32 +162,10 @@ export default function Index({
           e.preventDefault();
         }}
         onDrag={(e) => e.preventDefault()}
-        onMouseDown={(e) => {
-          setIsDrag(true);
-          setDownX(e.clientX);
-          setMoveX(BOARD_POS_X);
-          setDownY(e.clientY);
-          boardRef.current.style.border = "2px dotted #4d4d4d";
-        }}
+        onMouseDown={(e) => moveStart(e)}
         onMouseMove={(e) => onMoveBoard(e)}
-        onMouseLeave={() => {
-          setIsDrag(false);
-          setDownX(0);
-          setMoveX(BOARD_POS_X);
-          setMoveY(5);
-          boardRef.current.style.border = "none";
-          boardRef.current.style.transform = "rotate(0)";
-          onChangePlace(0, 0, 0, 0);
-        }}
-        onMouseUp={() => {
-          setIsDrag(false);
-          setDownX(0);
-          setMoveX(BOARD_POS_X);
-          setMoveY(5);
-          boardRef.current.style.border = "none";
-          boardRef.current.style.transform = "rotate(0)";
-          onChangePlace(0, 0, 0, 0);
-        }}
+        onMouseLeave={() => moveCrash()}
+        onMouseUp={() => moveEnd()}
         ref={boardRef}
       >
         <div className={Styles.card_Header}>
@@ -161,21 +178,7 @@ export default function Index({
           </div>
 
           <div className={Styles.card_name}>
-            <div className={Styles.title}>
-              {!isEditName ? (
-                name
-              ) : (
-                <input
-                  type="text"
-                  placeholder={"Название..."}
-                  value={cardName}
-                  onChange={(e) => {
-                    setCardName(e.target.value);
-                  }}
-                />
-              )}
-            </div>
-
+            <div className={Styles.title}>{name}</div>
             <div className={Styles.deleteBoard}>
               <img src={deleteIcon} width={18} alt="" onClick={onDeleteBoard} />
             </div>
