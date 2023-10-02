@@ -1,25 +1,90 @@
 .addButton_wrapper {
+  position: absolute;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.658);
-  border-radius: 14px;
-  text-align: center;
 
-  &:hover {
-    transition: ease-out 0.1s;
-    background-color: rgba(20, 20, 20, 0.658);
-    cursor: pointer;
-  }
+  padding: 5px;
+  border-radius: 5px;
+  text-align: center;
 
   &:active {
     transform: scale(0.95);
   }
 
   .content {
-    padding: 10px 20px;
+    background-color: rgb(31, 30, 30);
+    padding: 20px 20px;
+    border-radius: 5px;
     display: flex;
     align-items: center;
     img {
-      margin-left: 10px;
+      margin-right: 10px;
+    }
+
+    &:hover {
+      transition: ease-out 0.1s;
+      background-color: rgb(20, 20, 20);
+      cursor: pointer;
+    }
+  }
+}
+
+.editBoard {
+  position: absolute;
+  background-color: #252525;
+  text-align: center;
+  padding: 10px;
+  border-radius: 5px;
+  textarea {
+    font-family: Arial;
+    font-size: 16px;
+    resize: none;
+    background-color: #2d2f35;
+    border: none;
+    width: 200px;
+    border: 2px solid #39659e00;
+    border-radius: 2px;
+    padding: 10px;
+    &::placeholder {
+      color: #4a4a4b;
+    }
+
+    &:focus {
+      color: #fff;
+      outline: #39659e;
+      border: 2px solid #39659e;
+      &::placeholder {
+        color: #39659e;
+      }
+    }
+  }
+
+  .actions {
+    display: flex;
+    justify-content: start;
+    button {
+      border: none;
+      border-radius: 2px;
+    }
+    .accept {
+      background-color: rgb(101, 152, 211);
+      height: 30px;
+      margin-right: 10px;
+
+      &:hover {
+        cursor: pointer;
+        background-color: rgb(89, 148, 214);
+      }
+    }
+
+    .cancel {
+      background-color: rgb(214, 89, 89);
+      height: 30px;
+      margin-right: 10px;
+
+      &:hover {
+        cursor: pointer;
+        background-color: rgb(219, 65, 65);
+      }
     }
   }
 }

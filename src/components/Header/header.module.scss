@@ -1,10 +1,18 @@
 .header_wrapper {
+  display: flex;
+  align-items: center;
   width: 100vw;
-  height: 40px;
-  background-color: rgba(0, 255, 255, 0);
-  text-align: center;
-  justify-content: center;
+  height: 60px;
+  padding: 0 30px;
+  background-color: #272b30;
   font-weight: 600;
   color: rgb(245, 245, 245);
   font-size: 30px;
+  .title {
+    font-size: 20px;
+    span {
+      color: #535bf2;
+      font-weight: 600;
+    }
+  }
 }

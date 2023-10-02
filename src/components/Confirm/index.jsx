@@ -1,7 +1,9 @@
 import React from "react";
 import Styles from "./confirm.module.scss";
+import { useSelector } from "react-redux";
 
-export default function Index({ isConfirm, onConfirm, onCancel }) {
+export default function Index({ onConfirm, onCancel }) {
+  const isConfirm = useSelector((state) => state.popups.isConfirm);
   return (
     <>
       <div

@@ -1,0 +1,30 @@
+{
+  "boards": [
+    {
+      "id": "FZE7x",
+      "name": "zxczxc",
+      "position": 0,
+      "color": "#242424",
+      "tasks": []
+    },
+    {
+      "id": "XAVZD",
+      "name": "asdasd",
+      "position": 1,
+      "color": "#242424",
+      "tasks": []
+    }
+  ],
+  "tasks": [
+    {
+      "id": "OMnwL-t",
+      "name": "Задача",
+      "link": "k8UrV"
+    },
+    {
+      "id": "B3pGg-t",
+      "name": "Задача",
+      "link": "k8UrV"
+    }
+  ]
+}
