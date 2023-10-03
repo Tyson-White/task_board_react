@@ -24,12 +24,12 @@ body {
   width: 100%;
   height: 100%;
   background-color: #242424;
-  background-image: url("./assets/img/sky.jpg");
+  background-image: url("./assets/img/sky_night.png");
   background-repeat: no-repeat;
   background-size: cover;
 }
 .night {
-  background-image: url("./assets/img/sky_night.png");
+  background-image: url("./assets/img/sky.jpg");
   background-repeat: no-repeat;
   background-size: cover;
 }
@@ -93,11 +93,13 @@ a:hover {
   border-radius: 10px;
   text-wrap: wrap;
   display: flex;
+
   align-items: center;
   justify-content: space-between;
   font-weight: 600;
   &:first-child {
     margin: 0;
+    margin-bottom: 10px;
   }
 
   &:hover {
@@ -147,10 +149,6 @@ a:hover {
   }
 }
 
-.dark_theme {
-  background-color: #494949;
-}
-
 .sidebar {
   position: relative;
   width: 230px;
@@ -161,40 +159,92 @@ a:hover {
     cursor: pointer;
     position: absolute;
     bottom: 100px;
-    left: 35%;
+    left: 30%;
+    display: flex;
+    justify-content: space-between;
     transition: 0.3s;
-    height: 30px;
-    width: 60px;
-    background-color: #f1f1f1;
+    height: 40px;
+    width: 70px;
+    background-color: #272727;
     border-radius: 30px;
+    border: 2px solid #f7f7f7;
     -webkit-box-shadow: 0px 0px 16px 17px rgba(0, 0, 0, 0.2) inset;
     -moz-box-shadow: 0px 0px 16px 17px rgba(0, 0, 0, 0.2) inset;
     box-shadow: 0px 0px 16px 17px rgba(0, 0, 0, 0.2) inset;
     display: flex;
     align-items: center;
-    padding: 2px 5px;
+    padding: 5px 15px;
+  }
+
+  .dark_theme {
+    background-color: #54c2ca;
   }
 }
 
-.toggle {
-  transition: ease-out 0.3s;
-  transform: translate(-10px, 0px);
-  display: flex;
-  align-items: center;
-  background-color: #535bf2;
-  width: 40px;
-  height: 40px;
+.toggle_circle {
+  position: absolute;
+  height: 45px;
+  width: 45px;
+  background-color: #f0f0f0;
+  z-index: 0;
   border-radius: 50%;
-  font-size: 10px;
-  justify-content: center;
-  font-weight: 600;
-  -webkit-box-shadow: 0px 0px 22px 9px rgba(89, 156, 208, 0.2);
-  -moz-box-shadow: 0px 0px 22px 9px rgba(89, 156, 208, 0.2);
-  box-shadow: 0px 0px 22px 9px rgba(89, 156, 208, 0.2);
+
+  /* Когда анимация будет закончена, начните снова */
+
+  @keyframes long {
+    0% {
+      transform: translate(1px, 1px) rotate(0deg);
+    }
+    10% {
+      transform: translate(-1px, -2px) rotate(-1deg);
+    }
+    20% {
+      transform: translate(-3px, 0px) rotate(1deg);
+    }
+    30% {
+      width: 90px;
+    }
+    40% {
+      width: 90px;
+    }
+    50% {
+      width: 90px;
+    }
+    60% {
+      width: 90px;
+    }
+    70% {
+      width: 90px;
+    }
+    80% {
+      transform: translate(-1px, -1px) rotate(1deg);
+    }
+    90% {
+      transform: translate(1px, 2px) rotate(0deg);
+    }
+    100% {
+      transform: translate(1px, -2px) rotate(-1deg);
+    }
+  }
 }
 
-.toggle_dark {
-  transition: ease-out 0.3s;
-  background-color: #242424;
-  transform: translate(30px, 0px);
+.circle_right {
+  transition: 0.3s;
+  transform: translate(-12.5px, 0);
+}
+.circle_left {
+  transition: 0.3s;
+  transform: translate(37px, 0);
+}
+
+.sun {
+  transition: 0.3s;
+  z-index: 1;
+  transform: scale(1.8);
+}
+
+.moon {
+  transition: 0.3s;
+  z-index: 1;
+  transform: scale(1.8);
 }

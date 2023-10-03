@@ -3,20 +3,27 @@ import Styles from "./TasksWindow.module.scss";
 import addIcon from "../../assets/icons/addIcon.svg";
 import Task from "../Task";
 import deleteIcon from "../../assets/icons/delete.svg";
+import acceptIcon from "../../assets/icons/accept.svg";
+import { useBoards } from "../../redux/hooks/useBoards";
+import menuIcon from "../../assets/icons/menu-dots.svg";
 import { changePositios, deleteBoard } from "../../redux/slices/boardSlice";
 import { createTask } from "../../redux/slices/boardSlice";
 import { useActions } from "../../redux/hooks/useActions";
 import { useDispatch } from "react-redux";
-import { useBoards } from "../../redux/hooks/useBoards";
+
 export default function Index({ id, name, color, position, onChangePlace }) {
   const BOARD_POS_X = 20 + 20 * position + 268 * position;
   const BOARD_WIDTH = 268;
 
   // board info
   const [cardColor, setCardColor] = React.useState(color);
+  const [cardName, setCardName] = React.useState(name);
   const [isNaming, setIsNaming] = React.useState(false);
   const [taskName, setTaskName] = React.useState("");
   const [show, setShow] = React.useState(false);
+  const [isEditName, setIsEditName] = React.useState(false);
+
+  const [isShowMenu, setIsShowMenu] = React.useState(false);
 
   const [isDrag, setIsDrag] = React.useState(false);
   const [downX, setDownX] = React.useState(0);
@@ -25,6 +32,8 @@ export default function Index({ id, name, color, position, onChangePlace }) {
   const [moveY, setMoveY] = React.useState();
 
   const boardRef = React.useRef();
+  const inputRef = React.useRef();
+  const nameRef = React.useRef();
 
   const dispatch = useDispatch();
 
@@ -57,6 +66,7 @@ export default function Index({ id, name, color, position, onChangePlace }) {
   // самая сложная часть, делал 6 дней...
   const onMoveBoard = (e) => {
     if (isDrag) {
+      boardRef.current.style.border = "2px dotted #4d4d4d";
       boardRef.current.style.transform = "rotate(10deg)";
 
       const parentX = boardRef.current.parentNode.getBoundingClientRect().x;
@@ -130,7 +140,6 @@ export default function Index({ id, name, color, position, onChangePlace }) {
     setDownX(e.clientX);
     setMoveX(BOARD_POS_X);
     setDownY(e.clientY);
-    boardRef.current.style.border = "2px dotted #4d4d4d";
   };
 
   // если мышка ушла с элемента перетаскивание отменяется
@@ -162,27 +171,53 @@ export default function Index({ id, name, color, position, onChangePlace }) {
           e.preventDefault();
         }}
         onDrag={(e) => e.preventDefault()}
-        onMouseDown={(e) => moveStart(e)}
         onMouseMove={(e) => onMoveBoard(e)}
         onMouseLeave={() => moveCrash()}
         onMouseUp={() => moveEnd()}
         ref={boardRef}
       >
-        <div className={Styles.card_Header}>
-          <div className={Styles.color_change}>
-            <input
-              type="color"
-              value={cardColor}
-              onChange={(e) => setCardColor(e.target.value)}
-            />
-          </div>
-
-          <div className={Styles.card_name}>
-            <div className={Styles.title}>{name}</div>
-            <div className={Styles.deleteBoard}>
-              <img src={deleteIcon} width={18} alt="" onClick={onDeleteBoard} />
+        <div className={Styles.card_Header} onMouseDown={(e) => moveStart(e)}>
+          {!isEditName ? (
+            <div
+              ref={nameRef}
+              className={Styles.title}
+              onClick={() => setIsEditName(true)}
+            >
+              {cardName}
             </div>
+          ) : (
+            <>
+              <input
+                value={cardName}
+                ref={inputRef}
+                autoFocus={true}
+                onChange={(e) => setCardName(e.target.value)}
+                className={Styles.name_edit}
+                type="text"
+                onKeyDown={(e) => e.code == "Enter" && setIsEditName(false)}
+              />
+            </>
+          )}
+          <div
+            className={Styles.menu_icon}
+            onClick={() => setIsShowMenu(!isShowMenu)}
+          >
+            <img src={menuIcon} width={20} alt="" />
           </div>
+          <div
+            className={
+              !isShowMenu ? Styles.menu : `${Styles.menu} ${Styles.menu_show}`
+            }
+          >
+            <div className={Styles.title}>Опции</div>
+            <ul>
+              <li>Поменять фон</li>
+              <li onClick={onDeleteBoard}>Удалить карточку</li>
+            </ul>
+          </div>
+          {/* <div className={Styles.deleteBoard}>
+            <img src={deleteIcon} width={18} alt="" onClick={onDeleteBoard} />
+          </div> */}
         </div>
         <div
           className={Styles.tasks}
@@ -218,6 +253,7 @@ export default function Index({ id, name, color, position, onChangePlace }) {
                 cols="30"
                 rows="2"
                 onChange={(e) => setTaskName(e.target.value)}
+                autoFocus={true}
               ></textarea>
               <div className={Styles.actions}>
                 <button className={Styles.accept} onClick={() => addTask()}>

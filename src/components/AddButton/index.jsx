@@ -54,6 +54,7 @@ export default function Index({ onAccept }) {
           onChange={(e) => {
             setName(e.target.value);
           }}
+          autoFocus={true}
           value={name}
         ></textarea>
 

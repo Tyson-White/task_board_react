@@ -77,14 +77,24 @@ function App() {
               }}
             >
               <div
-                className={theme == "light" ? "toggle" : "toggle toggle_dark"}
-              >
-                {theme == "light" ? (
-                  <img src={sun} alt="" width={20} />
-                ) : (
-                  <img src={moon} alt="" width={20} />
-                )}
-              </div>
+                className={
+                  theme == "light"
+                    ? "toggle_circle circle_right"
+                    : "toggle_circle circle_left"
+                }
+              ></div>
+              <img
+                src={moon}
+                className={theme == "light" && "sun"}
+                width={20}
+                alt=""
+              />
+              <img
+                src={sun}
+                className={theme != "light" && "moon"}
+                width={20}
+                alt=""
+              />
             </div>
           </div>
           <div className="boards">
