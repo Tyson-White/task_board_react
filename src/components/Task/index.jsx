@@ -5,11 +5,19 @@ import { deleteTask } from "../../redux/slices/boardSlice";
 import { useDispatch } from "react-redux";
 import { useActions } from "../../redux/hooks/useActions";
 
-export default function Index({ id, name }) {
+export default function Index({ id, name, position }) {
+  const TASK_WIDTH = 55;
+
   const { startDragTask, endDragTask } = useActions();
   const [show, setShow] = React.useState(false);
   const taskRef = React.useRef();
   const dispatch = useDispatch();
+
+  const [isDrag, setIsDrag] = React.useState(false);
+  const [downX, setDownX] = React.useState(0);
+  const [downY, setDownY] = React.useState(0);
+  const [moveY, setMoveY] = React.useState(0);
+  const [moveX, setMoveX] = React.useState(0);
 
   React.useEffect(() => {
     // animation for show
@@ -24,28 +32,47 @@ export default function Index({ id, name }) {
     }, 200);
   };
 
-  const illuminationOn = (e) => {
-    if (e.target.className == "task") {
-      e.target.style.boxShadow = "0px 2px 1px #000";
-    }
-  };
-
-  const illuminationOff = (e) => {
-    if (e.target.className == "task") {
-      e.target.style.boxShadow = "0px 0px 0px grey";
-    }
-  };
   return (
     <div
       className={
         show ? `${Styles.task_wrapper} ${Styles.show}` : Styles.task_wrapper
       }
+      style={{
+        left: isDrag ? moveX + "px" : "13px",
+        top: isDrag
+          ? moveY + "px"
+          : 10 * position + position * TASK_WIDTH + "px",
+      }}
       ref={taskRef}
-      draggable={true}
-      onDragOver={(e) => illuminationOn(e)}
-      onDragLeave={(e) => illuminationOff(e)}
-      onDragStart={() => startDragTask(name)}
-      onDragEnd={() => endDragTask()}
+      draggable={false}
+      onDragStart={() => {
+        return false;
+      }}
+      onMouseDown={(e) => {
+        setIsDrag(true);
+        setDownX(e.clientX);
+        setDownY(e.clientY);
+        setMoveY(10 * position + position * TASK_WIDTH);
+      }}
+      onMouseMove={(e) => {
+        if (isDrag) {
+          const parent = taskRef.current.parentNode;
+          const parentX = parent.getBoundingClientRect().x;
+          const parentY = parent.getBoundingClientRect().y;
+          const taskX = taskRef.current.getBoundingClientRect().left - parentX;
+          const taskY = taskRef.current.getBoundingClientRect().top - parentY;
+          taskRef.current.style.transition = "0s";
+          taskRef.current.style.zIndex = 200;
+          setMoveX(13 + e.clientX - downX);
+          setMoveY(10 * position + position * TASK_WIDTH + e.clientY - downY);
+        }
+      }}
+      onMouseUp={() => {
+        setIsDrag(false);
+        setMoveX(13);
+        taskRef.current.style.zIndex = 1;
+        taskRef.current.style.left = "13px";
+      }}
     >
       <div className={"task"}>
         <div className={Styles.task_title}>{name}</div>

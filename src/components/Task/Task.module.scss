@@ -1,8 +1,8 @@
 .task_wrapper {
+  position: absolute;
   transition: ease 0.4s;
   opacity: 0;
   cursor: grab;
-  margin-top: 10px;
   width: 90%;
 }
 

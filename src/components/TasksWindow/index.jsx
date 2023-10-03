@@ -14,15 +14,17 @@ import { useDispatch } from "react-redux";
 export default function Index({ id, name, color, position, onChangePlace }) {
   const BOARD_POS_X = 20 + 20 * position + 268 * position;
   const BOARD_WIDTH = 268;
+  const TASK_WIDTH = 55;
 
   // board info
   const [cardColor, setCardColor] = React.useState(color);
   const [cardName, setCardName] = React.useState(name);
-  const [isNaming, setIsNaming] = React.useState(false);
-  const [taskName, setTaskName] = React.useState("");
   const [show, setShow] = React.useState(false);
   const [isEditName, setIsEditName] = React.useState(false);
 
+  const [isNaming, setIsNaming] = React.useState(false);
+  const [taskName, setTaskName] = React.useState("");
+  const [tasksIn, setTasksIn] = React.useState(0);
   const [isShowMenu, setIsShowMenu] = React.useState(false);
 
   const [isDrag, setIsDrag] = React.useState(false);
@@ -44,9 +46,18 @@ export default function Index({ id, name, color, position, onChangePlace }) {
     setTimeout(() => setShow(true), 0.5);
   }, []);
 
+  React.useEffect(() => {
+    let count = 0;
+    for (let i = 0; i < boards.tasksList.length; i++) {
+      if (boards.tasksList[i].link == id) {
+        count += 1;
+      }
+    }
+    setTasksIn(count);
+  }, [boards]);
   const addTask = () => {
     setIsNaming(false);
-    dispatch(createTask({ id, taskName }));
+    dispatch(createTask({ id, taskName, tasksIn }));
   };
 
   const onDeleteBoard = () => {
@@ -224,6 +235,9 @@ export default function Index({ id, name, color, position, onChangePlace }) {
           onDragOver={() => {
             setSelectedBoard(id);
           }}
+          style={{
+            minHeight: (TASK_WIDTH + 10 * tasksIn) * tasksIn + 20 + "px",
+          }}
         >
           {boards.tasksList.length > 0 &&
             boards.tasksList.map(
@@ -233,6 +247,7 @@ export default function Index({ id, name, color, position, onChangePlace }) {
                     key={item.id}
                     id={item.id}
                     name={item.name}
+                    position={item.position}
                     onDeleteTask={(taskName) => deleteTask({ name, taskName })}
                   />
                 )

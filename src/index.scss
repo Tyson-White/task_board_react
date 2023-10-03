@@ -93,17 +93,13 @@ a:hover {
   border-radius: 10px;
   text-wrap: wrap;
   display: flex;
-
+  z-index: 100;
   align-items: center;
   justify-content: space-between;
   font-weight: 600;
   &:first-child {
     margin: 0;
     margin-bottom: 10px;
-  }
-
-  &:hover {
-    background-color: #dba999b2;
   }
 
   img {

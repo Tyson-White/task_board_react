@@ -79,6 +79,7 @@ export const createTask = createAsyncThunk(
       id,
       name: item.taskName,
       link: item.id,
+      position: item.tasksIn,
     };
 
     axios.post("http://localhost:5174/tasks", obj);
